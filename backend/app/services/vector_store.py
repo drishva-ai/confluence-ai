@@ -13,14 +13,25 @@ logger = logging.getLogger(__name__)
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 class VectorStore:
-    def __init__(self, persist_directory: str = "data/embeddings"):
+    def __init__(self, persist_directory: str = None):
+        # Use /tmp for Render compatibility (writable directory)
+        if persist_directory is None:
+            persist_directory = os.environ.get('DATA_DIR', '/tmp/data/embeddings')
+        
         self.persist_directory = persist_directory
         self.persist_file = os.path.join(persist_directory, "documents.pkl")
         self._embedding_model = None
         self.documents = []  # List of dicts with 'text', 'metadata', 'embedding'
         
         # Create persist directory if it doesn't exist
-        os.makedirs(persist_directory, exist_ok=True)
+        try:
+            os.makedirs(persist_directory, exist_ok=True)
+            logger.info(f"[VectorStore] Using persist directory: {persist_directory}")
+        except Exception as e:
+            logger.error(f"[VectorStore] Failed to create directory: {e}")
+            # Fallback to current directory
+            self.persist_directory = "./data/embeddings"
+            os.makedirs(self.persist_directory, exist_ok=True)
         
     async def initialize(self):
         """Initialize the embedding model and load existing documents"""
@@ -125,6 +136,8 @@ class VectorStore:
     async def _persist(self):
         """Save documents to disk"""
         try:
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(self.persist_file), exist_ok=True)
             with open(self.persist_file, 'wb') as f:
                 pickle.dump(self.documents, f)
             logger.debug(f"[VectorStore] Persisted {len(self.documents)} documents")
