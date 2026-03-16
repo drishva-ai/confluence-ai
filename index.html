@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drishva AI - Confluence Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            background: white;
+            color: #4a3b8c;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Features */
+        .features {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-card h3 {
+            color: #4a3b8c;
+            margin-bottom: 15px;
+        }
+        
+        /* Chat Container */
+        .chat-section {
+            padding: 60px 20px;
+            background: #f5f7fb;
+        }
+        
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: #4a3b8c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f7fb;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message.user {
+            align-items: flex-end;
+        }
+        
+        .message.bot {
+            align-items: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .user .message-content {
+            background: #4a3b8c;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .bot .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        #question {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        #sendBtn {
+            background: #4a3b8c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        #sendBtn:hover {
+            background: #5a4b9c;
+        }
+        
+        .typing {
+            color: #999;
+            font-style: italic;
+            padding: 10px;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .pricing h2 {
+            text-align: center;
+            color: #4a3b8c;
+            margin-bottom: 40px;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .pricing-card.popular {
+            transform: scale(1.05);
+            border: 2px solid #4a3b8c;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            color: #4a3b8c;
+            margin: 20px 0;
+        }
+        
+        .price small {
+            font-size: 1rem;
+            color: #999;
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .pricing-card li {
+            margin: 10px 0;
+            color: #666;
+        }
+        
+        .pricing-button {
+            background: #4a3b8c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Drishva AI Assistant</h1>
+        <p>Ask questions about your Confluence documentation and get instant AI-powered answers. Works with pages, PDFs, Word docs, and Excel files.</p>
+        <a href="#chat" class="cta-button">Try Demo Now ?</a>
+    </div>
+    
+    <div class="features">
+        <div class="feature-card">
+            <h3>?? Instant Answers</h3>
+            <p>Get immediate responses from your entire Confluence documentation using advanced AI.</p>
+        </div>
+        <div class="feature-card">
+            <h3>?? Multiple Formats</h3>
+            <p>Works with Confluence pages, PDFs, Word documents, and Excel files.</p>
+        </div>
+        <div class="feature-card">
+            <h3>?? Secure & Private</h3>
+            <p>Your data stays private. Choose from cloud or on-premise deployment.</p>
+        </div>
+    </div>
+    
+    <div class="chat-section" id="chat">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>Drishva AI Confluence Assistant</h2>
+                <p>Ask anything about your documentation</p>
+            </div>
+            
+            <div class="messages" id="messages"></div>
+            
+            <div class="input-container">
+                <input type="text" id="question" placeholder="E.g., How do I set up the API?" />
+                <button id="sendBtn">Send</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pricing">
+        <h2>Simple, Transparent Pricing</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Starter</h3>
+                <div class="price">?2,999<small>/month</small></div>
+                <ul>
+                    <li>1 Confluence space</li>
+                    <li>500 queries/month</li>
+                    <li>Email support</li>
+                </ul>
+                <a href="#" class="pricing-button">Get Started</a>
+            </div>
+            
+            <div class="pricing-card popular">
+                <h3>Growth</h3>
+                <div class="price">?7,999<small>/month</small></div>
+                <ul>
+                    <li>5 Confluence spaces</li>
+                    <li>5,000 queries/month</li>
+                    <li>Priority support</li>
+                </ul>
+                <a href="#" class="pricing-button">Most Popular ?</a>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="price">?24,999<small>/month</small></div>
+                <ul>
+                    <li>Unlimited spaces</li>
+                    <li>Unlimited queries</li>
+                    <li>On-premise option</li>
+                </ul>
+                <a href="#" class="pricing-button">Contact Us</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2026 Drishva AI. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        const messagesContainer = document.getElementById('messages');
+        const questionInput = document.getElementById('question');
+        const sendBtn = document.getElementById('sendBtn');
+        
+        // Replace with your Render backend URL
+        const API_URL = 'https://confluence-ai-2.onrender.com';
+        
+        function addMessage(text, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = text;
+            
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing';
+            typingDiv.id = 'typing';
+            typingDiv.textContent = 'AI is thinking...';
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+        
+        async function sendMessage() {
+            const question = questionInput.value.trim();
+            if (!question) return;
+            
+            addMessage(question, true);
+            questionInput.value = '';
+            showTyping();
+            
+            try {
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                const data = await response.json();
+                removeTyping();
+                addMessage(data.answer, false);
+            } catch (error) {
+                removeTyping();
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+                console.error('Error:', error);
+            }
+        }
+        
+        sendBtn.addEventListener('click', sendMessage);
+        questionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
