@@ -1,16 +1,3 @@
-"""
-Vector Store Service
-=====================
-Takes documents from Confluence and:
-1. Splits them into chunks (small pieces)
-2. Converts each chunk to a vector (numbers)
-3. Stores in Qdrant vector database
-4. Searches for relevant chunks when user asks a question
-
-Uses sentence-transformers for embeddings — completely FREE, runs locally.
-No OpenAI embedding costs ever.
-"""
-
 import os
 import json
 import logging
@@ -23,7 +10,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 # Use the exact model name that works with cache
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"  # Full model name
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 class VectorStore:
     def __init__(self, persist_directory: str = "data/embeddings"):
