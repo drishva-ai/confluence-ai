@@ -9,8 +9,8 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-# Use the exact model name that works with cache
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# Use smaller embedding model to reduce memory usage
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"  # Changed from full path to smaller cached version
 
 class VectorStore:
     def __init__(self, persist_directory: str = None):
